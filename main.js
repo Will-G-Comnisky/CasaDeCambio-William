@@ -1,10 +1,7 @@
 var listaMoedas = document.getElementById('idMoedas');
-listaMoedas.onload = function() {
-    let moedas = document.createElement('option');
-    moedas = exibirMoedas(); 
-    datalist.appendChild(moedas);
-}
-
+listaMoedas.addEventListener('load', function()  {
+    buscarMoedas() 
+});
 
 
 function buscarMoedas() {
@@ -13,12 +10,17 @@ function buscarMoedas() {
     xhr.open('GET', 'https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/Moedas?$top=100&$format=json&$select=simbolo,nomeFormatado')
 
     xhr.addEventListener('load', function() {
-        let resposta = xhr.responseText;
-        exibirMoedas(resposta);
+        let moedas = JSON.parse(xhr.responseText);
+        listaMoedas.innerHTML = '';
+        moedas.forEach(moeda => {
+            let option = document.createElement('option');
+            option.value = moeda.simbolo;
+            option.textContent = '(' + moeda.nomeFormatado + ')';
+            listaMoedas.appendChild(option);
+        });
     })
 
     xhr.send();
-
 }
 
 function exibirMoedas(moedasJSON) {
