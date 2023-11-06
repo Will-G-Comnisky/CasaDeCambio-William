@@ -1,4 +1,6 @@
-var listaMoedas = document.getElementById('idMoedas');
+var listaMoedas1 = document.getElementsByClassName('moedas')[0];
+var listaMoedas2 = document.getElementsByClassName('moedas')[1];
+var listaMoedas3 = document.getElementsByClassName('moedas')[2];
 
 // ------ FUNÇÃO auto executavel async await para buscar as informações de moedas
 (async function() {
@@ -6,7 +8,15 @@ var listaMoedas = document.getElementById('idMoedas');
     
     moedas.value.forEach(moeda => {
         let option = criarOption(moeda);
-        listaMoedas.appendChild(option);
+        listaMoedas1.appendChild(option);
+    });
+    moedas.value.forEach(moeda => {
+        let option = criarOption(moeda);
+        listaMoedas2.appendChild(option);
+    });
+    moedas.value.forEach(moeda => {
+        let option = criarOption(moeda);
+        listaMoedas3.appendChild(option);
     });
 })();
 
@@ -45,20 +55,25 @@ function criarOption(moeda) {
     return option;
 }
 
-var btnConverter = document.getElementById('idConverter');
+var btnConverter = document.getElementById('idCotacao');
 btnConverter.addEventListener('click', async function() {
     let selectMoeda = document.getElementById('idMoedas');
     let moedaSelecionada = selectMoeda.value;
+
     const date = new Date();
     let day = date.getDate().toString().padStart(2, '0');
     let month = (date.getMonth() + 1).toString().padStart(2, '0');
     let year = date.getFullYear();
     let dateString = `${month}-${day}-${year}`;
+
     var apiUrl = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='${moedaSelecionada}'&@dataCotacao='${dateString}'&$top=100&$format=json&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao`;
+
     try {
         const response = await fetch(apiUrl);
         if (response.ok) {
             const cotacao = await response.json();
+            let saida = document.getElementById('idSaida1');
+            saida.value = 'R$ ' + cotacao.value[4].cotacaoCompra;    
             console.log(cotacao.value[4].cotacaoCompra); // Captura dos dados da cotação de compra da moeda selecionada
         } else {
             console.error('Erro na solicitação à API');
@@ -66,6 +81,7 @@ btnConverter.addEventListener('click', async function() {
     } catch (error) {
         console.error('Erro na solicitação à API:', error);
     }
+
 
 });
 
