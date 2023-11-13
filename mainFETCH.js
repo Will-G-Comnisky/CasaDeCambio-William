@@ -1,3 +1,7 @@
+
+let valorDestino = document.getElementById('idValorMoeda2');
+
+
 // Cada input na tela é uma lista de moedas, por isso criamos essas três variaveis:
 var listaMoedas1 = document.getElementsByClassName('moedas')[0];
 var listaMoedas2 = document.getElementsByClassName('moedas')[1];
@@ -20,41 +24,6 @@ var listaMoedas3 = document.getElementsByClassName('moedas')[2];
         listaMoedas3.appendChild(option);
     });
 })();
-
-
-
-// ---------FETCH para obter simbolo e nome das moedas
-
-async function buscarMoedas() {
-    const resposta = await fetch("https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/Moedas?$top=100&$format=json&$select=simbolo,nomeFormatado");
-    if (!resposta.ok) {
-        throw new Error('Erro ao buscar moedas');
-    }
-
-    return resposta.json();
-}
-
-// ---------FETCH para obter cotação de moedas
-
-async function buscarCotacao(moedaSelecionada, dateString) {
-    const resposta = await fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda=${moedaSelecionada}&@dataCotacao=${getDate().dateString}&$top=100&$format=json&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao`);
-    if (!resposta.ok) {
-        throw new Error('Erro ao buscar cotação');
-    }
-
-    const cotacao = await resposta.json();
-    console.log(cotacao);
-    return cotacao;
-}
-
-// ------------ FUNÇÃO para criar as opções de moeda no select do HTML
-
-function criarOption(moeda) {
-    let option = document.createElement('option');
-    option.value = moeda.simbolo;
-    option.innerText = moeda.simbolo + " (" + moeda.nomeFormatado + ")";
-    return option;
-}
 
 function getDate() {
     const date = new Date();
@@ -89,6 +58,27 @@ function getDate() {
     };
 }
 
+// ---------FETCH para obter simbolo e nome das moedas
+
+async function buscarMoedas() {
+    const resposta = await fetch("https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/Moedas?$top=100&$format=json&$select=simbolo,nomeFormatado");
+    if (!resposta.ok) {
+        throw new Error('Erro ao buscar moedas');
+    }
+
+    return resposta.json();
+}
+
+
+// ------------ FUNÇÃO para criar as opções de moeda no select do HTML
+
+function criarOption(moeda) {
+    let option = document.createElement('option');
+    option.value = moeda.simbolo;
+    option.innerText = moeda.nomeFormatado + " (" + moeda.simbolo + ")";
+    return option;
+}
+
 // Event listener que adquire a cotação da moeda em real:
 var selectCotacao = document.getElementById('idMoedas');
 selectCotacao.addEventListener('change', async function() {
@@ -115,12 +105,23 @@ selectCotacao.addEventListener('change', async function() {
     }
 });
 
+
+
 // Event Listener que realiza a conversão das moedas ao clicar no botão:
-document.getElementById('idConverter').addEventListener('click', async function () {
-    // Obter valores dos elementos
-    let moedaOrigem = document.getElementById('idMoedaConversao1').value;
-    let moedaDestino = document.getElementById('idMoedaConversao2').value;
-    let valorOrigem = parseFloat(document.getElementById('idValorMoeda1').value);
+
+let converterBtn = document.getElementById('idConverter');
+converterBtn.addEventListener('click', async function () {
+
+    let dateValues = getDate();
+    let dateString = dateValues.dateString
+    
+    let moedaOrigem = document.getElementById('idMoedaConversao1');
+    let moedaOrigemSelecionada = moedaOrigem.value;
+
+    let moedaDestino = document.getElementById('idMoedaConversao2');
+    let moedaDestinoSelecionada = moedaDestino.value
+
+    let valorOrigem = document.getElementById('idValorMoeda1').value;
 
     // Verificar se os campos estão preenchidos
     if (!moedaOrigem || !moedaDestino || isNaN(valorOrigem)) {
@@ -128,25 +129,43 @@ document.getElementById('idConverter').addEventListener('click', async function 
         return;
     }
 
-    let dateValues = getDate();
-    let dateString = dateValues.dateString;
+    const apiUrl = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='${moedaOrigemSelecionada}'&@dataCotacao='${dateString}'&$top=100&$format=json&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao`;
+    const apiUrl2 = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='${moedaDestinoSelecionada}'&@dataCotacao='${dateString}'&$top=100&$format=json&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao`;
 
     try {
-        // Obter cotação da moeda de origem em relação ao Real
-        const cotacaoMoedaOrigem = await buscarCotacao(moedaOrigem, dateString);
+        const respostaOrigem = await fetch(apiUrl);
+        if (respostaOrigem.ok) {
+            let cotacoesJsonOrigem = await respostaOrigem.json();
+            cotacaoOrigem = cotacoesJsonOrigem.value[4].cotacaoCompra; // TA FUNCIONANDO, TA RETORNANDO O VALOR EM REAL DA MOEDA SELECIONADA
+        } else {
+            console.error('Erro na solicitação à API de moeda de origem');
+        }
 
-        // Obter cotação da moeda de destino em relação ao Real
-        const cotacaoMoedaDestino = await buscarCotacao(moedaDestino, dateString);
+        const respostaDestino = await fetch(apiUrl2);
+        if (respostaDestino.ok) {
+            let cotacoesJsonDestino = await respostaDestino.json();
+            cotacaoDestino = cotacoesJsonDestino.value[4].cotacaoCompra // TA FUNCIONANDO, TA RETORNANDO O VALOR EM REAL DA MOEDA SELECIONADA
+        } else {
+            console.error('Erro na solicitação à API de moeda de destino');
+        }
 
-        // Calcular valor convertido
-        const valorConvertido = (valorOrigem / cotacaoMoedaOrigem.value[4].cotacaoCompra) * cotacaoMoedaDestino.value[4].cotacaoCompra;
+        let valorOrigemEmReal = cotacaoOrigem * valorOrigem;
 
-        // Exibir valor convertido no campo correspondente
-        document.getElementById('idValorMoeda2').value = valorConvertido.toFixed(2);
+        let valorConvertido = valorOrigemEmReal / cotacaoDestino;
+
+        valorDestino.value = valorConvertido.toFixed(2);
+
     } catch (error) {
-        console.error('Erro na conversão:', error);
+        console.error('Erro:', error);
         alert('Erro na conversão. Por favor, tente novamente.');
     }
 });
+
+// --------------------------------------------------------------------------
+
+
+
+
+
 
 
