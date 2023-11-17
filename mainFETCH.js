@@ -155,11 +155,35 @@ converterBtn.addEventListener('click', async function () {
 
         valorDestino.value = valorConvertido.toFixed(2);
 
+        msgFinal();
+
     } catch (error) {
         console.error('Erro:', error);
         alert('Erro na conversão. Por favor, tente novamente.');
     }
 });
+
+// Exibe uma mensagem final para o usuário para melhor compreensão da operação.
+function msgFinal () {
+    let valorOrigem = document.getElementById('idValorMoeda1').value;
+    let valorDestino = document.getElementById('idValorMoeda2').value;
+    let moedaOrigem = document.getElementById('idMoedaConversao1').value;     
+    let moedaDestino = document.getElementById('idMoedaConversao2').value;
+    let mensagem = 'O valor de ' + valorOrigem + ' ' + moedaOrigem + ' vale o mesmo que ' + valorDestino + ' ' + moedaDestino;
+    
+    let h2Element = document.querySelector('h2.msgFinal');
+
+    if (h2Element) {
+        // Se o elemento já existir, atualizar o conteúdo
+        h2Element.innerHTML = mensagem;
+    } else {
+        // Se o elemento não existir, criar um novo
+        h2Element = document.createElement('h2');
+        h2Element.innerHTML = mensagem;
+        h2Element.classList.add('msgFinal');
+        document.body.appendChild(h2Element);
+    }
+}
 
 // --------------------------------------------------------------------------
 
