@@ -1,5 +1,7 @@
 
 let valorDestino = document.getElementById('idValorMoeda2');
+var cotacaoCompraRadio = document.getElementById("cotacaoCompraRadio");
+var cotacaoVendaRadio = document.getElementById("cotacaoVendaRadio");
 
 
 // Cada input na tela é uma lista de moedas, por isso criamos essas três variaveis:
@@ -135,34 +137,68 @@ converterBtn.addEventListener('click', async function () {
 
     // Necessário verificar se o usuário quer a cotação de venda ou compra
 
-    try {
-        const respostaOrigem = await fetch(apiUrl);
-        if (respostaOrigem.ok) {
-            let cotacoesJsonOrigem = await respostaOrigem.json();
-            cotacaoOrigem = cotacoesJsonOrigem.value[4].cotacaoCompra; // TA FUNCIONANDO, TA RETORNANDO O VALOR EM REAL DA MOEDA SELECIONADA
-        } else {
-            console.error('Erro na solicitação à API de moeda de origem');
+    if (cotacaoCompraRadio.checked) {
+        try {
+            const respostaOrigem = await fetch(apiUrl);
+            if (respostaOrigem.ok) {
+                let cotacoesJsonOrigem = await respostaOrigem.json();
+                cotacaoOrigem = cotacoesJsonOrigem.value[4].cotacaoCompra; // TA FUNCIONANDO, TA RETORNANDO O VALOR EM REAL DA MOEDA SELECIONADA
+            } else {
+                console.error('Erro na solicitação à API de moeda de origem');
+            }
+    
+            const respostaDestino = await fetch(apiUrl2);
+            if (respostaDestino.ok) {
+                let cotacoesJsonDestino = await respostaDestino.json();
+                cotacaoDestino = cotacoesJsonDestino.value[4].cotacaoCompra // TA FUNCIONANDO, TA RETORNANDO O VALOR EM REAL DA MOEDA SELECIONADA
+            } else {
+                console.error('Erro na solicitação à API de moeda de destino');
+            }
+    
+            let valorOrigemEmReal = cotacaoOrigem * valorOrigem;
+    
+            let valorConvertido = valorOrigemEmReal / cotacaoDestino;
+    
+            valorDestino.value = valorConvertido.toFixed(2);
+    
+            msgFinal();
+    
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro na conversão. Por favor, tente novamente.');
         }
-
-        const respostaDestino = await fetch(apiUrl2);
-        if (respostaDestino.ok) {
-            let cotacoesJsonDestino = await respostaDestino.json();
-            cotacaoDestino = cotacoesJsonDestino.value[4].cotacaoCompra // TA FUNCIONANDO, TA RETORNANDO O VALOR EM REAL DA MOEDA SELECIONADA
-        } else {
-            console.error('Erro na solicitação à API de moeda de destino');
+    } else if (cotacaoVendaRadio.checked) {
+        try {
+            const respostaOrigem = await fetch(apiUrl);
+            if (respostaOrigem.ok) {
+                let cotacoesJsonOrigem = await respostaOrigem.json();
+                cotacaoOrigem = cotacoesJsonOrigem.value[4].cotacaoVenda; // TA FUNCIONANDO, TA RETORNANDO O VALOR EM REAL DA MOEDA SELECIONADA
+            } else {
+                console.error('Erro na solicitação à API de moeda de origem');
+            }
+    
+            const respostaDestino = await fetch(apiUrl2);
+            if (respostaDestino.ok) {
+                let cotacoesJsonDestino = await respostaDestino.json();
+                cotacaoDestino = cotacoesJsonDestino.value[4].cotacaoVenda // TA FUNCIONANDO, TA RETORNANDO O VALOR EM REAL DA MOEDA SELECIONADA
+            } else {
+                console.error('Erro na solicitação à API de moeda de destino');
+            }
+    
+            let valorOrigemEmReal = cotacaoOrigem * valorOrigem;
+    
+            let valorConvertido = valorOrigemEmReal / cotacaoDestino;
+    
+            valorDestino.value = valorConvertido.toFixed(2);
+    
+            msgFinal();
+    
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro na conversão. Por favor, tente novamente.');
         }
-
-        let valorOrigemEmReal = cotacaoOrigem * valorOrigem;
-
-        let valorConvertido = valorOrigemEmReal / cotacaoDestino;
-
-        valorDestino.value = valorConvertido.toFixed(2);
-
-        msgFinal();
-
-    } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro na conversão. Por favor, tente novamente.');
+    } else {
+        console.log('Não foi possível definir a conversão')
     }
 });
 
