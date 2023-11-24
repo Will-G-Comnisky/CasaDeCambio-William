@@ -80,6 +80,7 @@ function criarOption(moeda) {
 }
 
 // Event listener que adquire a cotação da moeda em real:
+
 var selectCotacao = document.getElementById('idMoedas');
 selectCotacao.addEventListener('change', async function() {
     let selectMoeda = document.getElementById('idMoedas');
@@ -131,6 +132,8 @@ converterBtn.addEventListener('click', async function () {
 
     const apiUrl = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='${moedaOrigemSelecionada}'&@dataCotacao='${dateString}'&$top=100&$format=json&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao`;
     const apiUrl2 = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='${moedaDestinoSelecionada}'&@dataCotacao='${dateString}'&$top=100&$format=json&$select=cotacaoCompra,cotacaoVenda,dataHoraCotacao`;
+
+    // Necessário verificar se o usuário quer a cotação de venda ou compra
 
     try {
         const respostaOrigem = await fetch(apiUrl);

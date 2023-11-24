@@ -49,14 +49,33 @@
                 </div>
             </div>
             <div class="row text-center mt-5">
-                <h3>Conversão de Moedas</h3>
-                <p>Nós realizamos a conversão de valores de uma moeda pra outra, simples e prático!</p>
-                <h4>Instruções</h4>   
-                <p>1 - Selecione a moeda de origem, a que você possui e deseja converter</p>
-                <p>2 - Digite o valor de conversão planejado em "Valor de origem"</p>
-                <p>3 - Selecione a sua moeda de destino</p>
-                <p>4 - Clique em converter!</p>
+                <h3 class="fs-1">Conversão de Moedas</h3>
+                <p class="fs-4">Nós realizamos a conversão de valores de uma moeda pra outra, simples e prático!</p>
+                <h4 class="fs-2 mt-4">Instruções</h4>
+                <div class="fs-5">
+                    <p>1 - Selecione a moeda de origem, a que você possui e deseja converter</p>
+                    <p>2 - Digite o valor de conversão planejado em "Valor de origem"</p>
+                    <p>3 - Selecione a sua moeda de destino</p>
+                    <p>4 - Caso queira vender um valor em moeda estrangeira, selecione cotação por valor de compra</p>
+                    <p>4.1 - Caso queira comprar um valor em moeda estrangeira, selecione cotação por valor de venda</p>
+                    <p>5 - Clique em converter!</p>
+                </div>   
             </div>
+            <div class="row m-auto col-3">
+                <div class="form-check form-check-inline fs-4">
+                    <input class="form-check-input" type="radio" name="cotacaoRadio" id="cotacaoCompraRadio" checked>
+                    <label class="form-check-label" for="cotacaoCompraRadio">
+                        Cotação de compra
+                    </label>
+                </div>
+                <div class="form-check form-check-inline fs-4">
+                    <input class="form-check-input" type="radio" name="cotacaoRadio" id="cotacaoVendaRadio">
+                    <label class="form-check-label" for="cotacaoVendaRadio">
+                        Cotação de venda
+                    </label>
+                </div>
+            </div>
+            
             <div class="row justify-content-evenly mt-2">
                 <div class="col-md-4 mb-2">
                     <label for="idMoedaConversao1">De: </label>
@@ -82,10 +101,11 @@
                     <input type="number" class="form-control" name="valorMoeda2" id="idValorMoeda2" placeholder="Resultado da conversão">
                 </div>
             </div>
+            
 
             <div class="row justify-content-center">
                 <div class="col-md-4 text-center">
-                    <input type="button" class="btn btn-outline-light mt-2 p-3" id="idConverter" value="-> Converter ->">
+                    <input type="button" class="btn btn-outline-light mt-4 p-3 fs-4" id="idConverter" value="-> Converter ->">
                 </div>
             </div>
         </div>
