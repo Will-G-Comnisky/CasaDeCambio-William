@@ -1,3 +1,5 @@
+/*
+
 const listaMoedas = document.getElementById('idMoedas');
 
 buscarMoedas(carregarSelectMoedas) //  1- adicionando callback ao código
@@ -28,4 +30,5 @@ function carregarSelectMoedas(moedas) { // 5 -  Criação da função carregarSe
 }
 
 //Como eu quero que essa função seja executada ao carregar a pagina, posso adicionar onload? Ou DOMContentLoad?
+*/
 
