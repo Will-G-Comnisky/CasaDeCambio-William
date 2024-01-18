@@ -10,33 +10,82 @@
 <style>
         html, body {
             height: 100%;
+            margin: 0; /* Remova a margem padrão do body para cobrir toda a altura da página */
         }
+
         body {
+            position: relative;
             background-image: url("https://images.pexels.com/photos/4025825/pexels-photo-4025825.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
             background-repeat: no-repeat;
-            background-size: cover;
+            background-size: 100% 100vh;
+            background-position: center;
+            overflow-y: auto;
+            background-attachment: fixed;
             color: #fff; /* Cor do texto */
             -webkit-text-stroke-width: .5px;
             -webkit-text-stroke-color: black;
             font-family: Arial, Helvetica, sans-serif;
         }
+
+        /* Estilo para a div de fundo */
+        .background-container {
+            position: relative;
+            max-width: 100%;
+            max-height: 100vh;
+        }
+
+        /* Estilo para a imagem de fundo */
+        .background-image {
+            width: 100%;
+            height: 1500px;
+            object-fit: cover; /* Para cobrir todo o contêiner */
+        }
+
+        /* Sombreamento escuro sobre a imagem de fundo */
+        .dark-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1048px;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)); /* Usando gradiente para sombreamento */
+            z-index: -1;
+        }
+
+        /* Conteúdo da página */
+        .content {
+            position: relative;
+            z-index: 1; /* Garante que o conteúdo fique acima do overlay */
+        }
+
+        .fixed-top {
+            position: fixed;
+            width: 100%;
+            z-index: 2; /* Garante que o cabeçalho fique acima do sombreamento */
+        }
+
         .msgFinal {
             font-family: Arial, Helvetica, sans-serif;
             font-weight: bold;
             display: flex;
             justify-content: center;
         }
-</style>
+    </style>
 </head>
-<body class="d-flex flex-column min-vh-100">  
-    <header class="bg-dark text-white text-center p-3 fixed-top">   
-        <h1>XPTO</h1>
-        <h2>Sua casa de câmbio confiável </h2>
-    </header>
+<body class="d-flex flex-column min-vh-100">
+    <div class="background-container">
+        <div class="dark-overlay"></div>
 
-    <div class="d-flex flex-column align-items-center justify-content-center mt-4 p-5">
-        <div class="container container-fluid col-12 text-center mt-5 p-5">
-            <div class="row text-center mt-5 p-4">
+
+        <header class="bg-dark text-white text-center p-2">   
+            <h1>XPTO</h1>
+            <h2>Sua casa de câmbio confiável </h2>
+        </header>
+
+
+    <div class="content d-flex flex-column align-items-center justify-content-center p-2">
+        <div class="container container-fluid col-12 text-center p-2">
+            <div class="row text-center p-2">
                 <h3>Cotação Atual</h3>
                 <p>Caso você deseje saber o valor de cotação da moeda atualmente em reais</p>   
             </div>
@@ -53,11 +102,11 @@
                     <input type="text" class="form-control" id="idSaida1" placeholder="Cotação atual da moeda em R$">
                 </div>
             </div>
-            <div class="row text-center mt-5">
-                <h3 class="fs-1">Conversão de Moedas</h3>
-                <p class="fs-4">Nós realizamos a conversão de valores de uma moeda pra outra, simples e prático!</p>
-                <h4 class="fs-2 mt-4">Instruções</h4>
-                <div class="fs-5">
+            <div class="row text-center mt-3">
+                <h3 class="fs-3">Conversão de Moedas</h3>
+                <p class="fs-5">Nós realizamos a conversão de valores de uma moeda pra outra, simples e prático!</p>
+                <h4 class="fs-3 mt-2">Instruções</h4>
+                <div class="fs-6">
                     <p>1 - Selecione a moeda de origem, a que você possui e deseja converter</p>
                     <p>2 - Digite o valor de conversão planejado em "Valor de origem"</p>
                     <p>3 - Selecione a sua moeda de destino</p>
@@ -66,14 +115,14 @@
                     <p>5 - Clique em converter!</p>
                 </div>   
             </div>
-            <div class="row m-auto col-3">
-                <div class="form-check form-check-inline fs-4">
+            <div class="row m-auto col-2">
+                <div class="form-check form-check-inline fs-5">
                     <input class="form-check-input" type="radio" name="cotacaoRadio" id="cotacaoCompraRadio" checked>
                     <label class="form-check-label" for="cotacaoCompraRadio">
                         Cotação de compra
                     </label>
                 </div>
-                <div class="form-check form-check-inline fs-4">
+                <div class="form-check form-check-inline fs-5">
                     <input class="form-check-input" type="radio" name="cotacaoRadio" id="cotacaoVendaRadio">
                     <label class="form-check-label" for="cotacaoVendaRadio">
                         Cotação de venda
@@ -110,11 +159,14 @@
 
             <div class="row justify-content-center">
                 <div class="col-md-4 text-center">
-                    <input type="button" class="btn btn-outline-light mt-4 p-3 fs-4" id="idConverter" value="-> Converter ->">
+                    <input type="button" class="btn btn-outline-light mt-3 mb-3 p-2 fs-4" id="idConverter" value="Converter">
                 </div>
             </div>
         </div>
     </div>
+    </div>
+
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
